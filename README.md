@@ -42,6 +42,7 @@ flowchart LR
 | Subtract | `GET /api/v1/subtract?a=&b=` | `a - b` |
 | Multiply | `GET /api/v1/multiply?a=&b=` | `a * b` |
 | Divide | `GET /api/v1/divide?a=&b=` | `a / b`; `b = 0` → HTTP 400 |
+| Modulo | `GET /api/v1/modulo?a=&b=` | `a % b`; `b = 0` → HTTP 400 |
 | Health | `GET /actuator/health` | `{"status":"UP"}` |
 | Info | `GET /actuator/info` | app version and the Jenkins build number running |
 

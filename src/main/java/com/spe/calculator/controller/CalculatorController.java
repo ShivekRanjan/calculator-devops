@@ -40,4 +40,9 @@ public class CalculatorController {
     public CalculationResponse divide(@RequestParam("a") Double a, @RequestParam("b") Double b) {
         return CalculationResponse.of("divide", a, b, calculatorService.divide(a, b));
     }
+
+    @GetMapping("/modulo")
+    public CalculationResponse modulo(@RequestParam("a") Double a, @RequestParam("b") Double b) {
+        return CalculationResponse.of("modulo", a, b, calculatorService.modulo(a, b));
+    }
 }

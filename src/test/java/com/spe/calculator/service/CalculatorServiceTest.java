@@ -81,6 +81,14 @@ class CalculatorServiceTest {
         assertThrows(InvalidCalculationException.class, () -> service.divide(5, -0.0));
     }
 
+    @Test
+    @DisplayName("modulo returns the remainder and rejects zero")
+    void modulo() {
+        assertDecimalEquals("1", service.modulo(10, 3));
+        assertDecimalEquals("0.5", service.modulo(5.5, 1));
+        assertThrows(InvalidCalculationException.class, () -> service.modulo(10, 0));
+    }
+
     @ParameterizedTest(name = "rejects {0} as operand a")
     @ValueSource(doubles = {Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY})
     void rejectsNonFiniteFirstOperand(double value) {

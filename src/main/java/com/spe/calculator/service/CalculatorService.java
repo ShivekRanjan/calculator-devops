@@ -40,6 +40,15 @@ public class CalculatorService {
         return dividend.divide(divisor, PRECISION).stripTrailingZeros();
     }
 
+    public BigDecimal modulo(double a, double b) {
+        BigDecimal dividend = toDecimal("a", a);
+        BigDecimal divisor = toDecimal("b", b);
+        if (divisor.signum() == 0) {
+            throw new InvalidCalculationException("Modulo by zero is not allowed");
+        }
+        return dividend.remainder(divisor, PRECISION).stripTrailingZeros();
+    }
+
     /**
      * Rejects NaN and Infinity (Java happily parses "NaN" and "Infinity" as doubles)
      * and converts the value to an exact decimal.
