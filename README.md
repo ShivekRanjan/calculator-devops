@@ -5,6 +5,7 @@ CSE 816 Software Production Engineering — Mini-Project.
 A small Spring Boot calculator API wrapped in a fully automated DevOps pipeline:
 **GitHub → Jenkins → Maven build & JUnit tests → Docker image → Docker Hub → Docker Compose deployment (Nginx + 2 replicas)**, with email notifications.
 
+- GitHub repository: https://github.com/ShivekRanjan/calculator-devops
 - Docker Hub image: https://hub.docker.com/r/shivek414/calculator
 - Setup guide (Jenkins, Docker Hub, email, webhook): [docs/SETUP.md](docs/SETUP.md)
 
