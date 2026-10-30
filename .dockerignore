@@ -1,0 +1,19 @@
+# Keep the build context small and free of secrets / local junk.
+# Only pom.xml and src/ are needed by the Dockerfile.
+target/
+.git/
+.gitignore
+.idea/
+.vscode/
+*.iml
+.DS_Store
+.env
+*.log
+
+Dockerfile
+.dockerignore
+docker-compose.yml
+Jenkinsfile
+nginx/
+docs/
+README.md
