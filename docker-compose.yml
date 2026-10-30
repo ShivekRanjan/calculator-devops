@@ -1,0 +1,65 @@
+# Full stack: 2 calculator replicas behind an Nginx reverse proxy.
+#
+#   docker compose up -d          # start everything
+#   curl "http://localhost:8081/api/v1/add?a=2&b=3"
+#   docker compose down           # stop everything
+#
+# Jenkins sets DOCKER_IMAGE and IMAGE_TAG; locally the defaults below are used
+# (the image is built from the Dockerfile if it doesn't exist yet).
+
+name: calculator
+
+services:
+  calculator:
+    image: ${DOCKER_IMAGE:-calculator-api}:${IMAGE_TAG:-latest}
+    build:
+      context: .
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SERVER_PORT: "8080"
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75.0"
+    expose:
+      - "8080"                     # reachable only inside the Compose network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO /dev/null http://127.0.0.1:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    networks:
+      - backend
+
+  proxy:
+    build:
+      context: ./nginx
+    depends_on:
+      calculator:
+        condition: service_healthy   # don't start routing until the API is UP
+    ports:
+      - "${PROXY_PORT:-8081}:80"     # 8081 because Jenkins usually owns 8080
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO /dev/null http://127.0.0.1/nginx-health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - frontend
+      - backend
+
+networks:
+  # Public side: only the proxy publishes a port
+  frontend:
+    driver: bridge
+  # Private side: proxy <-> calculator replicas; no direct outside access
+  backend:
+    driver: bridge
+    internal: true
